@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tính giá GóiHàngChuẩn.vn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-6 font-sans text-gray-800">
+
+  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 space-y-6">
+    <h1 class="text-2xl font-bold text-center text-indigo-600">📦 Tính giá dịch vụ goihangchuan.vn</h1>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block font-semibold">👤 Số nhân viên đóng hàng</label>
+        <input type="number" id="staff" class="w-full mt-1 p-2 border rounded" min="1" value="3">
+      </div>
+
+      <div>
+        <label class="block font-semibold">📦 Số đơn hàng mỗi tháng</label>
+        <input type="number" id="orders" class="w-full mt-1 p-2 border rounded" min="1" value="5000">
+      </div>
+
+      <div>
+        <label class="block font-semibold">⏱ Thời gian quay trung bình (phút/đơn)</label>
+        <input type="number" id="duration" class="w-full mt-1 p-2 border rounded" step="0.1" value="2">
+      </div>
+
+      <div>
+        <label class="block font-semibold">☁️ Dung lượng cloud muốn mua</label>
+        <select id="storage" class="w-full mt-1 p-2 border rounded">
+          <option value="50">50 GB</option>
+          <option value="100">100 GB</option>
+          <option value="200">200 GB</option>
+          <option value="500">500 GB</option>
+          <option value="1000">1 TB</option>
+        </select>
+        <p id="suggested" class="text-sm text-gray-500 mt-1 italic"></p>
+      </div>
+
+      <div class="pt-4 border-t">
+        <h3 class="font-semibold mb-2 text-indigo-600">🔧 Mua thêm</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium">+10.000 đơn hàng (400.000đ / gói)</label>
+            <select id="extraOrdersQty" class="w-full mt-1 p-2 border rounded">
+              <option value="0">0</option>
+              <option value="1">1 gói</option>
+              <option value="2">2 gói</option>
+              <option value="3">3 gói</option>
+              <option value="4">4 gói</option>
+              <option value="5">5 gói</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">+50GB lưu trữ (150.000đ / gói)</label>
+            <select id="extraStorageQty" class="w-full mt-1 p-2 border rounded">
+              <option value="0">0</option>
+              <option value="1">1 gói</option>
+              <option value="2">2 gói</option>
+              <option value="3">3 gói</option>
+              <option value="4">4 gói</option>
+              <option value="5">5 gói</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t">
+      <h2 class="text-lg font-semibold text-indigo-600">💰 Tổng chi phí: <span id="total" class="text-black font-bold">0</span> đ/tháng</h2>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto mt-10 bg-white shadow-md rounded-xl p-6">
+    <h2 class="text-xl font-bold mb-4 text-indigo-700">📋 Bảng giá chi tiết</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-700">
+      <div>
+        <h3 class="font-semibold text-indigo-500 mb-1">👥 Nhân viên</h3>
+        <ul class="list-disc list-inside">
+          <li>1–5: 35.000đ/người</li>
+          <li>6–10: 30.000đ/người</li>
+          <li>11–20: 20.000đ/người</li>
+          <li>21+: 15.000đ/người</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-indigo-500 mb-1">📦 Đơn hàng</h3>
+        <ul class="list-disc list-inside">
+          <li>Đến 30.000 đơn: <b>Miễn phí</b></li>
+          <li>+10.000 đơn: 400.000đ</li>
+          <li>+50.000 đơn: 1.500.000đ</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-indigo-500 mb-1">☁️ Cloud</h3>
+        <ul class="list-disc list-inside">
+          <li>50GB: 150.000đ</li>
+          <li>100GB: 250.000đ</li>
+          <li>200GB: 500.000đ</li>
+          <li>500GB: 1.250.000đ</li>
+          <li>1TB: 2.500.000đ</li>
+          <li>Thêm 50GB: 150.000đ/gói</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const staffInput = document.getElementById("staff");
+    const ordersInput = document.getElementById("orders");
+    const durationInput = document.getElementById("duration");
+    const storageSelect = document.getElementById("storage");
+    const totalSpan = document.getElementById("total");
+    const suggestedText = document.getElementById("suggested");
+    const extraOrdersQty = document.getElementById("extraOrdersQty");
+    const extraStorageQty = document.getElementById("extraStorageQty");
+
+    function calculate() {
+      const staff = parseInt(staffInput.value);
+      const orders = parseInt(ordersInput.value);
+      const duration = parseFloat(durationInput.value);
+      const storage = parseInt(storageSelect.value);
+      const extraOrders = parseInt(extraOrdersQty.value);
+      const extraStorage = parseInt(extraStorageQty.value);
+
+      let userRate = 35_000;
+      if (staff > 20) userRate = 15_000;
+      else if (staff > 10) userRate = 20_000;
+      else if (staff > 5) userRate = 30_000;
+      const staffCost = staff * userRate;
+
+      let orderCost = 0;
+      if (orders > 30000) {
+        const extra = Math.ceil((orders - 30000) / 10000);
+        orderCost += extra * 400_000;
+      }
+      orderCost += extraOrders * 400_000;
+
+      const avgMB = duration * 20; // 20MB/phút
+      const totalMB = avgMB * orders;
+      const monthlyGB = Math.ceil(totalMB / 1024);
+      suggestedText.textContent = `Dung lượng cần ~${monthlyGB}GB/tháng (lưu 20 ngày ~${Math.ceil(monthlyGB * 0.7)}GB active)`;
+
+      // Cloud base
+      let cloudCost = 0;
+      if (storage === 100) cloudCost = 250_000;
+      else if (storage === 200) cloudCost = 500_000;
+      else if (storage === 500) cloudCost = 1_250_000;
+      else if (storage === 1000) cloudCost = 2_500_000;
+      else if (storage === 50) cloudCost = 150_000;
+      cloudCost += extraStorage * 150_000;
+
+      const total = staffCost + orderCost + cloudCost;
+      totalSpan.textContent = total.toLocaleString("vi-VN");
+    }
+
+    // Event binding
+    [staffInput, ordersInput, durationInput, storageSelect, extraOrdersQty, extraStorageQty].forEach(el =>
+      el.addEventListener("input", calculate)
+    );
+
+    calculate();
+  </script>
+</body>
+</html>
